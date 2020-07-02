@@ -1,8 +1,8 @@
 CC ?= /usr/bin/cc
 CFLAGS += -Wall -Wextra -Wpedantic -Wmissing-prototypes -Wredundant-decls \
-  -Wshadow -Wpointer-arith -mavx2 -mbmi -mpopcnt -maes \
+  -Wshadow -Wpointer-arith -mavx2 -mbmi2 -mpopcnt -maes \
   -march=native -mtune=native -O3 -fomit-frame-pointer
-NISTFLAGS += -Wno-unused-result -mavx2 -mbmi -mpopcnt -maes \
+NISTFLAGS += -Wno-unused-result -mavx2 -mbmi2 -mpopcnt -maes \
   -march=native -mtune=native -O3
 RM = /bin/rm
 
@@ -56,6 +56,12 @@ shared: \
   libpqcrystals_fips202x4_avx2.so \
   libpqcrystals_aes256ctr_avx2.so
 
+%.o : %.c
+	$(CC) $(CFLAGS) -I. -L. -l:libpqcrystals_kyber_common_avx2.a $(KYBER_VERSION) -c $< -o $@
+
+%.o : %.S
+	$(CC) $(CFLAGS) -I. -L. -l:libpqcrystals_kyber_common_avx2.a $(KYBER_VERSION) -c $< -o $@
+
 keccak4x/KeccakP-1600-times4-SIMD256.o: \
   keccak4x/KeccakP-1600-times4-SIMD256.c \
   keccak4x/KeccakP-1600-times4-SnP.h \
@@ -64,6 +70,34 @@ keccak4x/KeccakP-1600-times4-SIMD256.o: \
   keccak4x/align.h \
   keccak4x/brg_endian.h
 	$(CC) $(CFLAGS) -c $< -o $@
+
+libpqcrystals_kyber_common_avx2.a: KYBER_VERSION = 
+libpqcrystals_kyber_common_avx2.a: fips202.o fips202x4.o symmetric-shake.o keccak4x/KeccakP-1600-times4-SIMD256.o
+	$(AR) -rc $@ $?
+	rm -f *.o
+
+libpqcrystals_kyber1024_avx2.a: KYBER_VERSION = -DKYBER_K=4
+libpqcrystals_kyber1024_avx2.a: kem.o indcpa.o polyvec.o poly.o fq.o shuffle.o ntt.o invntt.o basemul.o consts.o rejsample.o cbd.o verify.o
+	$(AR) -rc $@ $?
+	rm -f *.o
+
+libpqcrystals_kyber768_avx2.a: KYBER_VERSION = -DKYBER_K=3
+libpqcrystals_kyber768_avx2.a: kem.o indcpa.o polyvec.o poly.o fq.o shuffle.o ntt.o invntt.o basemul.o consts.o rejsample.o cbd.o verify.o
+	$(AR) -rc $@ $?
+	rm -f *.o
+
+libpqcrystals_kyber512_avx2.a: KYBER_VERSION = -DKYBER_K=2
+libpqcrystals_kyber512_avx2.a: kem.o indcpa.o polyvec.o poly.o fq.o shuffle.o ntt.o invntt.o basemul.o consts.o rejsample.o cbd.o verify.o
+	$(AR) -rc $@ $?
+	rm -f *.o
+
+libpqcrystals_kyber_avx2.a: libpqcrystals_kyber_common_avx2.a
+	$(MAKE) libpqcrystals_kyber1024_avx2.a
+	$(MAKE) libpqcrystals_kyber768_avx2.a
+	$(MAKE) libpqcrystals_kyber512_avx2.a
+
+	$(CC) -c $(CFLAGS) -I. -L. -l:libpqcrystals_kyber1024_avx2.a -l:libpqcrystals_kyber768_avx2.a -l:libpqcrystals_kyber512_avx2.a -o libpqcrystals_kyber_avx2.o generic_api.c
+	$(AR) -rcT $@ libpqcrystals_kyber_avx2.o libpqcrystals_kyber_common_avx2.a libpqcrystals_kyber1024_avx2.a libpqcrystals_kyber768_avx2.a libpqcrystals_kyber512_avx2.a
 
 libpqcrystals_fips202_ref.so: fips202.c fips202.h
 	$(CC) -shared -fPIC $(CFLAGS) -o $@ $<
