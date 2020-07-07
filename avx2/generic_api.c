@@ -139,3 +139,27 @@ void kyber_free(KYBER* k) {
 
     free(k);
 }
+
+size_t kyber_ss_bytes(void) {
+    return 32;
+}
+
+size_t kyber_enc_bytes(KYBER * k) {
+    size_t size = 0;
+    switch (k->type)
+    {
+        case KYBER1024:
+            size = 1120; 
+            break;
+
+        case KYBER768:
+            size = 1088;
+            break;
+
+        case KYBER512:
+            size = 1056;
+            break;
+    }
+
+    return size;
+}

@@ -1,5 +1,5 @@
-#ifndef GENERIC_API_H
-#define GENERIC_API_H
+#ifndef KYBER_GENERIC_API_H
+#define KYBER_GENERIC_API_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -26,5 +26,7 @@ void kyber_free(KYBER* k);
 bool kyber_is_valid_type(int type);
 size_t kyber_sk_bytes(KYBER * k);
 size_t kyber_pk_bytes(KYBER * k);
+size_t kyber_ss_bytes(void);
+size_t kyber_enc_bytes(KYBER * k);
 
 #endif
