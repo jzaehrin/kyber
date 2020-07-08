@@ -3,6 +3,7 @@
 
 #include "generic_api.h"
 #include "implicit.h"
+#include "fips202.h"
 
 KYBER *kyber_new(void) {
     KYBER * kyber = NULL;
@@ -12,6 +13,10 @@ KYBER *kyber_new(void) {
     }
 
     return kyber;
+}
+
+void kyber_shake(uint8_t *out, size_t outlen, const uint8_t *in, size_t inlen) {
+    pqcrystals_fips202_ref_shake256(out, outlen, in, inlen);
 }
 
 int kyber_prepare(KYBER* k, int type) {

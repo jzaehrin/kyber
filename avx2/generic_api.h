@@ -21,6 +21,7 @@ int kyber_prepare(KYBER* k, int type);
 int kyber_generate_key(KYBER* k);
 int kyber_enc(unsigned char *ct, unsigned char *ss, const KYBER* k);
 int kyber_dec(unsigned char *ss, const unsigned char *ct, const KYBER* k);
+void kyber_shake(uint8_t *out, size_t outlen, const uint8_t *in, size_t inlen);
 void kyber_free(KYBER* k);
 
 bool kyber_is_valid_type(int type);
