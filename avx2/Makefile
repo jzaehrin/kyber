@@ -92,9 +92,9 @@ libpqcrystals_kyber512_avx2.a: kem.o indcpa.o polyvec.o poly.o fq.o shuffle.o nt
 	rm -f *.o
 
 libpqcrystals_kyber_avx2.a: libpqcrystals_kyber_common_avx2.a
-	$(MAKE) libpqcrystals_kyber1024_avx2.a
-	$(MAKE) libpqcrystals_kyber768_avx2.a
-	$(MAKE) libpqcrystals_kyber512_avx2.a
+	$(MAKE) -j4 libpqcrystals_kyber1024_avx2.a
+	$(MAKE) -j4 libpqcrystals_kyber768_avx2.a
+	$(MAKE) -j4 libpqcrystals_kyber512_avx2.a
 
 	$(CC) -c $(CFLAGS) -I. -L. -l:libpqcrystals_kyber1024_avx2.a -l:libpqcrystals_kyber768_avx2.a -l:libpqcrystals_kyber512_avx2.a -o libpqcrystals_kyber_avx2.o generic_api.c
 	$(AR) -rcT $@ libpqcrystals_kyber_avx2.o libpqcrystals_kyber_common_avx2.a libpqcrystals_kyber1024_avx2.a libpqcrystals_kyber768_avx2.a libpqcrystals_kyber512_avx2.a

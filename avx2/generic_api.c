@@ -92,10 +92,10 @@ int kyber_generate_key(KYBER* k) {
             return pqcrystals_kyber1024_avx2_keypair(k->pk, k->sk);
 
         case KYBER768:
-            return pqcrystals_kyber1024_avx2_keypair(k->pk, k->sk);
+            return pqcrystals_kyber768_avx2_keypair(k->pk, k->sk);
 
         case KYBER512:
-            return pqcrystals_kyber1024_avx2_keypair(k->pk, k->sk);
+            return pqcrystals_kyber512_avx2_keypair(k->pk, k->sk);
     }
 
     return 1;
@@ -154,7 +154,7 @@ size_t kyber_enc_bytes(KYBER * k) {
     switch (k->type)
     {
         case KYBER1024:
-            size = 1120; 
+            size = 1568; 
             break;
 
         case KYBER768:
@@ -162,7 +162,7 @@ size_t kyber_enc_bytes(KYBER * k) {
             break;
 
         case KYBER512:
-            size = 1056;
+            size = 736;
             break;
     }
 
