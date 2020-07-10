@@ -72,22 +72,22 @@ keccak4x/KeccakP-1600-times4-SIMD256.o: \
 	$(CC) $(CFLAGS) -c $< -o $@
 
 libpqcrystals_kyber_common_avx2.a: KYBER_VERSION = 
-libpqcrystals_kyber_common_avx2.a: fips202.o fips202x4.o symmetric-shake.o keccak4x/KeccakP-1600-times4-SIMD256.o
+libpqcrystals_kyber_common_avx2.a: fips202.o fips202x4.o keccak4x/KeccakP-1600-times4-SIMD256.o
 	$(AR) -rc $@ $?
 	rm -f *.o
 
 libpqcrystals_kyber1024_avx2.a: KYBER_VERSION = -DKYBER_K=4
-libpqcrystals_kyber1024_avx2.a: kem.o indcpa.o polyvec.o poly.o fq.o shuffle.o ntt.o invntt.o basemul.o consts.o rejsample.o cbd.o verify.o
+libpqcrystals_kyber1024_avx2.a: kem.o indcpa.o symmetric-shake.o polyvec.o poly.o fq.o shuffle.o ntt.o invntt.o basemul.o consts.o rejsample.o cbd.o verify.o
 	$(AR) -rc $@ $?
 	rm -f *.o
 
 libpqcrystals_kyber768_avx2.a: KYBER_VERSION = -DKYBER_K=3
-libpqcrystals_kyber768_avx2.a: kem.o indcpa.o polyvec.o poly.o fq.o shuffle.o ntt.o invntt.o basemul.o consts.o rejsample.o cbd.o verify.o
+libpqcrystals_kyber768_avx2.a: kem.o indcpa.o symmetric-shake.o polyvec.o poly.o fq.o shuffle.o ntt.o invntt.o basemul.o consts.o rejsample.o cbd.o verify.o
 	$(AR) -rc $@ $?
 	rm -f *.o
 
 libpqcrystals_kyber512_avx2.a: KYBER_VERSION = -DKYBER_K=2
-libpqcrystals_kyber512_avx2.a: kem.o indcpa.o polyvec.o poly.o fq.o shuffle.o ntt.o invntt.o basemul.o consts.o rejsample.o cbd.o verify.o
+libpqcrystals_kyber512_avx2.a: kem.o indcpa.o symmetric-shake.o polyvec.o poly.o fq.o shuffle.o ntt.o invntt.o basemul.o consts.o rejsample.o cbd.o verify.o
 	$(AR) -rc $@ $?
 	rm -f *.o
 
