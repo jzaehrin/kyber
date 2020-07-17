@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+/* Kyber structure */
 struct kyber {
     int type;
     unsigned char * pk;
@@ -11,10 +12,10 @@ struct kyber {
 };
 typedef struct kyber KYBER;
 
-/* Security level */
-#define KYBER1024 4
-#define KYBER768 3
-#define KYBER512 2
+/* Kyber variation */
+#define KYBER1024 3
+#define KYBER768 2
+#define KYBER512 1
 
 KYBER *kyber_new(void);
 int kyber_prepare(KYBER* k, int type);
@@ -28,6 +29,6 @@ bool kyber_is_valid_type(int type);
 size_t kyber_sk_bytes(KYBER * k);
 size_t kyber_pk_bytes(KYBER * k);
 size_t kyber_ss_bytes(void);
-size_t kyber_enc_bytes(KYBER * k);
+size_t kyber_ct_bytes(KYBER * k);
 
 #endif

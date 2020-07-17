@@ -5,6 +5,7 @@
 #include "implicit.h"
 #include "fips202.h"
 
+/* Allocate Kyber structure */
 KYBER *kyber_new(void) {
     KYBER * kyber = NULL;
 
@@ -15,10 +16,12 @@ KYBER *kyber_new(void) {
     return kyber;
 }
 
+/* Shake shared secret for key exchange, user need to allocate output buffer */
 void kyber_shake(uint8_t *out, size_t outlen, const uint8_t *in, size_t inlen) {
     pqcrystals_fips202_ref_shake256(out, outlen, in, inlen);
 }
 
+/* Prepare key buffers according to kyber variant type to store them */
 int kyber_prepare(KYBER* k, int type) {
     if (!kyber_is_valid_type(type))
         return 1; /* Type unknown */
@@ -33,6 +36,7 @@ int kyber_prepare(KYBER* k, int type) {
     return 0;
 }
 
+/* Verify if the variant type is a correct type for kyber */
 bool kyber_is_valid_type(int type) {
     switch (type)
     {
@@ -45,6 +49,7 @@ bool kyber_is_valid_type(int type) {
     }
 }
 
+/* Get the secret key size */
 size_t kyber_sk_bytes(KYBER * k) {
     size_t size = 0;
     switch (k->type)
@@ -63,8 +68,9 @@ size_t kyber_sk_bytes(KYBER * k) {
     }
 
     return size;
-}
 
+}
+/* Get the public key size */
 size_t kyber_pk_bytes(KYBER * k) {
     size_t size = 0;
     switch (k->type)
@@ -85,6 +91,7 @@ size_t kyber_pk_bytes(KYBER * k) {
     return size;
 }
 
+/* Generate a pair of secret and public keys */
 int kyber_generate_key(KYBER* k) {
     switch (k->type)
     {
@@ -101,6 +108,10 @@ int kyber_generate_key(KYBER* k) {
     return 1;
 }
 
+/*
+ * Generate a number in ss and encrypt this number in ss
+ *  user need to allocate ct and ss buffer
+ */
 int kyber_enc(unsigned char *ct, unsigned char *ss, const KYBER* k) {
     switch (k->type)
     {
@@ -116,6 +127,11 @@ int kyber_enc(unsigned char *ct, unsigned char *ss, const KYBER* k) {
 
     return 1;
 }
+
+/*
+ * Verify and decrypt ciphertext ct and store the number in ss
+ *  user need to allocate ss buffer
+ */
 int kyber_dec(unsigned char *ss, const unsigned char *ct, const KYBER* k){
     switch (k->type)
     {
@@ -132,6 +148,7 @@ int kyber_dec(unsigned char *ss, const unsigned char *ct, const KYBER* k){
     return 1;
 }
 
+/* Free kyber structure */
 void kyber_free(KYBER* k) {
     if (k == NULL)
         return;
@@ -145,11 +162,13 @@ void kyber_free(KYBER* k) {
     free(k);
 }
 
+/* Get number size from enc */
 size_t kyber_ss_bytes(void) {
     return 32;
 }
 
-size_t kyber_enc_bytes(KYBER * k) {
+/* Get ciphertext size */
+size_t kyber_ct_bytes(KYBER * k) {
     size_t size = 0;
     switch (k->type)
     {
